@@ -19,7 +19,7 @@ services:
     volumes_from:
       - wp-files
   wp-files:
-    image: wordpress:5.2.3-php7.2-fpm-alpine
+    image: wordpress:5.7.2-php7.4-fpm-alpine
     volumes:
       - ./wp-files:/var/www/html
       - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini

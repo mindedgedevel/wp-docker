@@ -1,8 +1,9 @@
-version: '2.1'
+version: '3.7'
 
 services:
   wp-db:
     image: mariadb
+    container_name: wp-db
     ports:
       - '8086:3306'
     volumes:
@@ -11,6 +12,9 @@ services:
       MYSQL_ROOT_PASSWORD: root
   wp-webserver:
     image: nginx:latest
+    container_name: wp-webserver
+    depends_on:
+      - wp-files
     ports:
       - '8084:80'
     volumes:
@@ -20,15 +24,23 @@ services:
       - wp-files
   wp-files:
     image: wordpress:5.7.2-php7.4-fpm-alpine
+    container_name: wp-files
+    depends_on:
+      - wp-db
     volumes:
       - ./wp-files:/var/www/html
       - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     links:
       - wp-db:mysql
     environment:
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: root
       WORDPRESS_DB_PASSWORD: root
   wp-phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
+    container_name: wp-phpmyadmin
+    depends_on:
+      - wp-db
     ports:
       - '8085:80'
     links:

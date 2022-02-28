@@ -23,7 +23,7 @@ services:
     volumes_from:
       - wp-files
   wp-files:
-    image: wordpress:5.7.2-php7.4-fpm-alpine
+    image: wordpress:5.9.1-php7.4-fpm-alpine
     container_name: wp-files
     depends_on:
       - wp-db

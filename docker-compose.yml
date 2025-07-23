@@ -1,14 +1,13 @@
-version: '3.7'
-
 services:
   wp-db:
-    image: mariadb
+    image: mariadb:latest
     container_name: wp-db
     ports:
       - '8086:3306'
     volumes:
       - ./mariadb:/var/lib/mysql
     environment:
+      MYSQL_DATABASE: wordpress
       MYSQL_ROOT_PASSWORD: root
   wp-webserver:
     image: nginx:latest
@@ -16,14 +15,15 @@ services:
     depends_on:
       - wp-files
     ports:
-      - '8084:80'
+      - '8084:80' #http
+      - '8087:443' #https
     volumes:
-      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
       - ./nginx/ssl:/etc/nginx/conf.d/ssl
     volumes_from:
       - wp-files
   wp-files:
-    image: wordpress:6.6.1-php8.2-fpm-alpine
+    image: wordpress:6.8.2-php8.3-fpm-alpine
     container_name: wp-files
     depends_on:
       - wp-db
